@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tiffin Stall</title>
+    <link rel="stylesheet" href="stall.css">
+</head>
+<body>
+    <div class="container">
+        <h1>TIFFIN STALL</h1>
+        <a href="new.html" class="home">HOME</a>
+        <div class="tiffin-container">
+            <!-- Idly -->
+            <div class="tiffin-item">
+                <h2>Idly</h2>
+                <img src="Assets\img\idly ai.jpeg" alt="Idly">
+                <div class="rate">Rate: 30 rupees per piece</div>
+                <div class="quantity">
+                    <button onclick="decrementQuantity(this)">-</button>
+                    <span>0</span>
+                    <button onclick="incrementQuantity(this)">+</button>
+                    <button onclick="addToCart(this.parentElement.parentElement, 'Idly', 30, 'Assets\\img\\idly ai.jpeg')">AddToCart</button>
+                </div>
+            </div>
+
+            <!-- Vada -->
+            <div class="tiffin-item">
+                <h2>Vada</h2>
+                <img src="Assets\img\vada ai.jpeg" alt="Vada">
+                <div class="rate">Rate: 25 rupees per piece</div>
+                <div class="quantity">
+                    <button onclick="decrementQuantity(this)">-</button>
+                    <span>0</span>
+                    <button onclick="incrementQuantity(this)">+</button>
+                    <button onclick="addToCart(this.parentElement.parentElement, 'vada', 25, 'Assets\\img\\vada ai.jpeg')">AddToCart</button>
+                </div>
+            </div>
+
+            <!-- Dosa -->
+            <div class="tiffin-item">
+                <h2>Dosa</h2>
+                <img src="Assets\img\dosa ai.jpeg" alt="Dosa">
+                <div class="rate">Rate: 40 rupees per piece</div>
+                <div class="quantity">
+                    <button onclick="decrementQuantity(this)">-</button>
+                    <span>0</span>
+                    <button onclick="incrementQuantity(this)">+</button>
+                    <button onclick="addToCart(this.parentElement.parentElement, 'Dosa', 40, 'Assets\\img\\dosa ai.jpeg')">AddToCart</button>
+                </div>
+            </div>
+
+            <!-- Bonda -->
+            <div class="tiffin-item">
+                <h2>Bonda</h2>
+                <img src="Assets\img\bonda ai.jpeg" alt="Bonda">
+                <div class="rate">Rate: 35 rupees per piece</div>
+                <div class="quantity">
+                    <button onclick="decrementQuantity(this)">-</button>
+                    <span>0</span>
+                    <button onclick="incrementQuantity(this)">+</button>
+                    <button onclick="addToCart(this.parentElement.parentElement, 'Bonda', 35, 'Assets\\img\\bonda ai.jpeg')">AddToCart</button>
+                </div>
+            </div>
+
+            <!-- Puri -->
+            <div class="tiffin-item">
+                <h2>Puri</h2>
+                <img src="Assets\img\puri ai.jpeg" alt="Puri">
+                <div class="rate">Rate: 30 rupees per piece</div>
+                <div class="quantity">
+                    <button onclick="decrementQuantity(this)">-</button>
+                    <span>0</span>
+                    <button onclick="incrementQuantity(this)">+</button>
+                    <button onclick="addToCart(this.parentElement.parentElement, 'Puri', 30, 'Assets\\img\\puri ai.jpeg')">AddToCart</button>
+                </div>
+            </div>
+
+            <!-- Upma -->
+            <div class="tiffin-item">
+                <h2>Upma</h2>
+                <img src="Assets\img\upma ai.jpeg" alt="Upma">
+                <div class="rate">Rate: 25 rupees per plate</div>
+                <div class="quantity">
+                    <button onclick="decrementQuantity(this)">-</button>
+                    <span>0</span>
+                    <button onclick="incrementQuantity(this)">+</button>
+                    <button onclick="addToCart(this.parentElement.parentElement, 'Upma', 60, 'Assets\\img\\upma ai.jpeg')">AddToCart</button>
+                </div>
+            </div>
+        </div>
+        <!-- Cart Section -->
+        <div class="cart">
+            <h2>Cart</h2>
+            <ul class="cart-items"></ul>
+            <p class="cart-total">Total: <span class="total-amount">0</span> rupees</p>
+            <button onclick="redirectToPayment()">Proceed to Payment</button>
+        </div>
+    </div>
+
+    <script>
+                 let cart = [];
+
+function updateCart() {
+    const cartItemsElement = document.querySelector('.cart-items');
+    let total = 0;
+    cartItemsElement.innerHTML = '';
+    cart.forEach(item => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+            <div><img src="${item.image}" alt="${item.name}"></div>
+            <div>${item.name} x ${item.quantity} - ${item.price * item.quantity} rupees</div>`;
+        cartItemsElement.appendChild(li);
+        total += item.price * item.quantity;
+    });
+    document.querySelector('.total-amount').textContent = total;
+}
+
+function redirectToPayment() {
+    const totalAmount = calculateTotal();
+    const paymentUrl = `payment.html?totalAmount=${totalAmount}&cartItems=${JSON.stringify(cart)}`;
+    window.location.href = paymentUrl;
+}
+
+function calculateTotal() {
+    let total = 0;
+    cart.forEach(item => {
+        total += item.price * item.quantity;
+    });
+    return total;
+}
+
+function addToCart(itemContainer, itemName, itemPrice, imageUrl) {
+    const span = itemContainer.querySelector('.quantity span');
+    const quantity = parseInt(span.textContent);
+    const existingItem = cart.find(item => item.name === itemName);
+    if (existingItem) {
+        existingItem.quantity += quantity;
+    } else {
+        cart.push({ name: itemName, price: itemPrice, quantity: quantity, image: imageUrl });
+    }
+    updateCart();
+}
+
+function incrementQuantity(button) {
+    const span = button.parentElement.querySelector("span");
+    let quantity = parseInt(span.innerText);
+    span.innerText = quantity + 1;
+}
+
+function decrementQuantity(button) {
+    const span = button.parentElement.querySelector("span");
+    let quantity = parseInt(span.innerText);
+    if (quantity > 0) {
+        span.innerText = quantity - 1;
+        const itemName = button.parentElement.parentElement.querySelector('h2').innerText;
+        const existingItem = cart.find(item => item.name === itemName);
+        if (existingItem) {
+            existingItem.quantity -= 1;
+            if (existingItem.quantity === 0) {
+                cart = cart.filter(item => item.name !== itemName);
+            }
+        }
+        updateCart();
+    }
+}
+    </script>
+</body>
+</html>
+
+
+
+
+

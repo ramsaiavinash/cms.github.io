@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chinese Stall</title>
+    <link rel="stylesheet" href="stall.css">
+</head>
+<body>
+    <div class="container">
+        <h1>CHINEESE STALL</h1>
+        <a href="new.html" class="home">HOME</a>
+        <div class="chinese-container">
+            <!-- Chicken Biriyani -->
+            <div class="chinese-item">
+                <h2>Chicken Biriyani</h2>
+                <img src="Assets\img\chickenbiriyani ai.jpeg" alt="Chicken Biriyani">
+                <div class="rate">Rate: 160 rupees</div>
+                <div class="quantity">
+                    <button onclick="decrementQuantity(this)">-</button>
+                    <span>0</span>
+                    <button onclick="incrementQuantity(this)">+</button>
+                    <button onclick="addToCart(this.parentElement.parentElement, 'Chicken Biriyani', 160, 'Assets\\img\\chickenbiriyani ai.jpeg')">AddToCart</button>
+                </div>
+            </div>
+
+            <!-- Chicken Fried Rice -->
+            <div class="chinese-item">
+                <h2>Chicken Fried Rice</h2>
+                <img src="Assets\img\chicke fried rice ai.jpeg" alt="Chicken Fried Rice">
+                <div class="rate">Rate: 130 rupees</div>
+                <div class="quantity">
+                    <button onclick="decrementQuantity(this)">-</button>
+                    <span>0</span>
+                    <button onclick="incrementQuantity(this)">+</button>
+                    <button onclick="addToCart(this.parentElement.parentElement, 'Chicken Fried Rice', 130, 'Assets\\img\\chicke fried rice ai.jpeg')">AddToCart</button>
+                </div>
+            </div>
+
+            <!-- Chicken Manchurian -->
+            <div class="chinese-item">
+                <h2>Chicken Manchurian</h2>
+                <img src="Assets\img\chiken manchurian ai.jpeg" alt="Chicken Manchurian">
+                <div class="rate">Rate: 100 rupees</div>
+                <div class="quantity">
+                    <button onclick="decrementQuantity(this)">-</button>
+                    <span>0</span>
+                    <button onclick="incrementQuantity(this)">+</button>
+                    <button onclick="addToCart(this.parentElement.parentElement, 'Chicken Manchurian', 100, 'Assets\\img\\chiken manchurian ai.jpeg')">AddToCart</button>
+                </div>
+            </div>
+
+            <!-- Veg Biriyani -->
+            <div class="chinese-item">
+                <h2>Veg Biriyani</h2>
+                <img src="Assets\img\veg fried rice ai.jpeg" alt="Veg Biriyani">
+                <div class="rate">Rate: 150 rupees</div>
+                <div class="quantity">
+                    <button onclick="decrementQuantity(this)">-</button>
+                    <span>0</span>
+                    <button onclick="incrementQuantity(this)">+</button>
+                    <button onclick="addToCart(this.parentElement.parentElement, 'Veg Biriyani', 150, 'Assets\\img\\veg fried rice ai.jpeg')">AddToCart</button>
+                </div>
+            </div>
+
+            <!-- Veg Fried Rice -->
+            <div class="chinese-item">
+                <h2>Veg Fried Rice</h2>
+                <img src="Assets\img\veg biriyania ai.jpeg" alt="Veg Fried Rice">
+                <div class="rate">Rate: 120 rupees</div>
+                <div class="quantity">
+                    <button onclick="decrementQuantity(this)">-</button>
+                    <span>0</span>
+                    <button onclick="incrementQuantity(this)">+</button>
+                    <button onclick="addToCart(this.parentElement.parentElement, 'Veg Fried Rice', 120, 'Assets\\img\\veg biriyania ai.jpeg')">AddToCart</button>
+                </div>
+            </div>
+
+            <!-- Gobi Manchurian -->
+            <div class="chinese-item">
+                <h2>Gobi Manchurian</h2>
+                <img src="Assets\img\gobi ai.jpeg" alt="Gobi Manchurian">
+                <div class="rate">Rate: 90 rupees</div>
+                <div class="quantity">
+                    <button onclick="decrementQuantity(this)">-</button>
+                    <span>0</span>
+                    <button onclick="incrementQuantity(this)">+</button>
+                    <button onclick="addToCart(this.parentElement.parentElement, 'Gobi Manchurian', 90, 'Assets\\img\\gobi ai.jpeg')">AddToCart</button>
+                </div>
+            </div>
+        </div>
+        <!-- Cart Section -->
+        <div class="cart">
+            <h2>Cart</h2>
+            <ul class="cart-items"></ul>
+            <p class="cart-total">Total: <span class="total-amount">0</span> rupees</p>
+            <button onclick="redirectToPayment()">Proceed to Payment</button>
+        </div>
+    </div>
+
+    <script>
+                let cart = [];
+
+function updateCart() {
+    const cartItemsElement = document.querySelector('.cart-items');
+    let total = 0;
+    cartItemsElement.innerHTML = '';
+    cart.forEach(item => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+            <div><img src="${item.image}" alt="${item.name}"></div>
+            <div>${item.name} x ${item.quantity} - ${item.price * item.quantity} rupees</div>`;
+        cartItemsElement.appendChild(li);
+        total += item.price * item.quantity;
+    });
+    document.querySelector('.total-amount').textContent = total;
+}
+
+function redirectToPayment() {
+    const totalAmount = calculateTotal();
+    const paymentUrl = `payment.html?totalAmount=${totalAmount}&cartItems=${JSON.stringify(cart)}`;
+    window.location.href = paymentUrl;
+}
+
+function calculateTotal() {
+    let total = 0;
+    cart.forEach(item => {
+        total += item.price * item.quantity;
+    });
+    return total;
+}
+
+function addToCart(itemContainer, itemName, itemPrice, imageUrl) {
+    const span = itemContainer.querySelector('.quantity span');
+    const quantity = parseInt(span.textContent);
+    const existingItem = cart.find(item => item.name === itemName);
+    if (existingItem) {
+        existingItem.quantity += quantity;
+    } else {
+        cart.push({ name: itemName, price: itemPrice, quantity: quantity, image: imageUrl });
+    }
+    updateCart();
+}
+
+function incrementQuantity(button) {
+    const span = button.parentElement.querySelector("span");
+    let quantity = parseInt(span.innerText);
+    span.innerText = quantity + 1;
+}
+
+function decrementQuantity(button) {
+    const span = button.parentElement.querySelector("span");
+    let quantity = parseInt(span.innerText);
+    if (quantity > 0) {
+        span.innerText = quantity - 1;
+        const itemName = button.parentElement.parentElement.querySelector('h2').innerText;
+        const existingItem = cart.find(item => item.name === itemName);
+        if (existingItem) {
+            existingItem.quantity -= 1;
+            if (existingItem.quantity === 0) {
+                cart = cart.filter(item => item.name !== itemName);
+            }
+        }
+        updateCart();
+    }
+}
+    </script>
+</body>
+</html>
+
+
+
